@@ -79,12 +79,8 @@ function addDepartment() {
 
 async function addRole() {
   let objDepartments = await dbhandler.employeedbQuery('SELECT name FROM department;');
-  let arrDepartments = [];
-  objDepartments.forEach(department => {
-    let Dept = department.name;
-    arrDepartments.push(Dept);
-  });
-  
+  const arrDepartments = objDepartments.map(department => department.name);
+
   inquirer.prompt([
     {
         type: 'input',
@@ -112,19 +108,11 @@ async function addRole() {
 async function addEmployee() {
   //Create an array of roles
   let objRoles = await dbhandler.employeedbQuery('SELECT title FROM role;');
-  let arrRoles = [];
-  objRoles.forEach(role => {
-    let Role = role.title;
-    arrRoles.push(Role);
-  });
+  const arrRoles = objRoles.map(role => role.title);
 
   //Create an array of managers
   let objManagers = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS manager FROM employee e1;`);
-  let arrManagers = [];
-  objManagers.forEach(manager => {
-    let Manager = manager.manager;
-    arrManagers.push(Manager);
-  });
+  const arrManagers = objManagers.map(manager => manager.manager);
 
   inquirer.prompt([
       {
@@ -159,18 +147,11 @@ async function addEmployee() {
 async function updateEmployeeRole() {
     //Create an array of employees
     let objEmployees = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee e1;`);
-    let arrEmployees = [];
-    objEmployees.forEach(employee => {
-      let Employee = employee.name;
-      arrEmployees.push(Employee);
-    });
+    const arrEmployees = objEmployees.map(employee => employee.name);
     //Create an array of roles
     let objRoles = await dbhandler.employeedbQuery('SELECT title FROM role;');
-    let arrRoles = [];
-    objRoles.forEach(role => {
-    let Role = role.title;
-    arrRoles.push(Role);
-    });
+    const arrRoles = objRoles.map(role => role.title);
+
     inquirer.prompt([
         {
             type: 'list',

@@ -37,7 +37,7 @@ All data is stored within a Postgres database called employee_db. Which can quer
 
 A video showing a demonstration of the application can be found below:
 
-https://docs.google.com/presentation/d/12R43ItL_bQHWnuk9miM01z_l1NDqUwPj_oMqWzROL0c/edit?usp=sharing
+[https://docs.google.com/presentation/d/12R43ItL_bQHWnuk9miM01z_l1NDqUwPj_oMqWzROL0c/edit?usp=sharing](https://drive.google.com/file/d/1GhxPTC9s4frdBh2C_Vl1ZqVZqz6ud4yu/view?usp=sharing)
   
 ## Contributing
 All code either written or refactored by Warren Shan.

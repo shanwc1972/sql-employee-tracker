@@ -8,22 +8,32 @@ function mainMenu() {
         type: 'list',
         name: 'mainchoice',
         message: 'What would you like to do?',
-        choices: ['View all employees', 'Add an employee', 'Update an employee role', 'View all departments', 'Add a department', 'View all roles', 'Add a role', 'Quit']
+        choices: ['View all employees', 'Add an employee', 'Delete an employee',
+          'Update an employee role', 'View all departments', 'Add a department', 'Delete a department', 'View all roles', 'Add a role', 'Delete a role', 'Quit']
     },
   ]).then(answers => {
     switch (answers.mainchoice) {
         case 'Add a department':
             addDepartment();
             break;
+        case 'Delete a department':
+            deleteDepartment();
+            break;
         case 'Add a role':
             addRole();
             break;
+        case 'Delete a role':
+            deleteRole();
+            break;    
         case 'Add an employee':
             addEmployee();
             break;
         case 'Update an employee role':
             updateEmployeeRole();
             break;
+        case 'Delete an employee':
+            deleteEmployee();
+            break;  
         case 'View all departments':
             viewDepartments();
             break;
@@ -78,6 +88,23 @@ function addDepartment() {
   });
 }
 
+async function deleteDepartment() {
+  let objDepartments = await dbhandler.employeedbQuery('SELECT name FROM department;');
+  const arrDepartments = objDepartments.map(department => department.name);
+  inquirer.prompt([
+    {
+        type: 'list',
+        name: 'department',
+        message: 'Select a department to delete:',
+        choices: arrDepartments
+    },
+  ]).then(answers => {
+    dbhandler.deleteDepartment(answers.department);
+    console.log(`Department ${answers.department} deleted`);
+    mainMenu();
+  });
+}
+
 async function addRole() {
   let objDepartments = await dbhandler.employeedbQuery('SELECT name FROM department;');
   const arrDepartments = objDepartments.map(department => department.name);
@@ -102,6 +129,24 @@ async function addRole() {
   ]).then(answers => {
     dbhandler.addRole(answers.title, answers.salary, answers.department);
     console.log(`New role: ${answers.title} added`);
+    mainMenu();
+  });
+}
+
+async function deleteRole() {
+  //Create an array of roles
+  let objRoles = await dbhandler.employeedbQuery('SELECT title FROM role;');
+  const arrRoles = objRoles.map(role => role.title);
+  inquirer.prompt([
+    {
+        type: 'list',
+        name: 'role',
+        message: 'Select a role to delete:',
+        choices: arrRoles
+    },
+  ]).then(answers => {
+    dbhandler.deleteRole(answers.role);
+    console.log(`Role ${answers.role} deleted`);
     mainMenu();
   });
 }
@@ -144,7 +189,6 @@ async function addEmployee() {
       mainMenu();
     });
   }
-
 async function updateEmployeeRole() {
     //Create an array of employees
     let objEmployees = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee e1;`);
@@ -171,6 +215,24 @@ async function updateEmployeeRole() {
       console.log(`Role for employee: ${answers.employeename} has been updated`);
       mainMenu();
     });
+}
+
+async function deleteEmployee() {
+  //Create an array of employees
+  let objEmployees = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee e1;`);
+  const arrEmployees = objEmployees.map(employee => employee.name);
+  inquirer.prompt([
+    {
+        type: 'list',
+        name: 'employee',
+        message: 'Select an employee to delete:',
+        choices: arrEmployees
+    },
+  ]).then(answers => {
+    dbhandler.deleteEmployee(answers.employee);
+    console.log(`Employee ${answers.employee} deleted`);
+    mainMenu();
+  });
 }
 
 console.log('----------------');

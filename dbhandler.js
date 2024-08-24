@@ -6,9 +6,9 @@ async function employeedbQuery(strQuery) {
   const client = new Client({
   host: 'localhost',
   port: 5432,
-  user: 'postgres',      // Replace with your database username
-  password: 'ForceB/wu',  // Replace with your database password
-  database: 'employees_db',  // Replace with your database name
+  user: 'postgres',      
+  password: 'ForceB/wu',  
+  database: 'employees_db',  
   });  
   let resultData;
     
@@ -38,9 +38,9 @@ function addDepartment(strDepartment) {
   const client = new Client({
     host: 'localhost',
     port: 5432,
-    user: 'postgres',      // Replace with your database username
-    password: 'ForceB/wu',  // Replace with your database password
-    database: 'employees_db',  // Replace with your database name
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',  
   });
 
   // Connect to the PostgreSQL database
@@ -55,9 +55,9 @@ function addDepartment(strDepartment) {
       `INSERT INTO department (name)
       VALUES  ($1);`, [strDepartment], (err, res) => {
       if (err) {
-        console.error('Query error', err.stack);
+        console.error('Insert error', err.stack);
       } else {
-        console.log('Query result:', res.rows);
+        //console.log('Insert result:', res.rows);
       }
 
       // Close the database connection
@@ -100,7 +100,7 @@ function addRole(strTitle, nSalary, strDepartment) {
             if (err) {
               console.error('Insert error', err.stack);
             } else {
-              console.log('Insert result:', res.rows);
+              //console.log('Insert result:', res.rows);
             }
             // Close the database connection
             client.end((err) => {
@@ -128,9 +128,9 @@ function addEmployee(strFName, strLName, strRole, strManager) {
   const client = new Client({
     host: 'localhost',
     port: 5432,
-    user: 'postgres',      // Replace with your database username
-    password: 'ForceB/wu',  // Replace with your database password
-    database: 'employees_db',  // Replace with your database name
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',  
   });
   
   // Connect to the PostgreSQL database
@@ -158,7 +158,7 @@ function addEmployee(strFName, strLName, strRole, strManager) {
                               if (err) {
                                   console.error('Insert error', err.stack);
                                 } else {
-                                  console.log('Insert result:', res.rows);
+                                  //console.log('Insert result:', res.rows);
                                 }
                                 // Close the database connection
                                 client.end((err) => {
@@ -189,9 +189,9 @@ function updateEmployeeRole(strEmpName, strEmpRole) {
   const client = new Client({
     host: 'localhost',
     port: 5432,
-    user: 'postgres',      // Replace with your database username
-    password: 'ForceB/wu',  // Replace with your database password
-    database: 'employees_db',  // Replace with your database name
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',
   });
 
   // Connect to the PostgreSQL database
@@ -218,7 +218,7 @@ function updateEmployeeRole(strEmpName, strEmpRole) {
             if (err) {
               console.error('Update error', err.stack);
             } else {
-              console.log('Update result:', res.rows);
+              //console.log('Update result:', res.rows);
             }
             // Close the database connection
             client.end((err) => {
@@ -240,11 +240,166 @@ function updateEmployeeRole(strEmpName, strEmpRole) {
     });
   });
 }
+
+function deleteDepartment(strDepartment) {
+      
+  // Define your database connection configuration
+  const client = new Client({
+    host: 'localhost',
+    port: 5432,
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',  
+  });
+
+  // Connect to the PostgreSQL database
+  client.connect((err) => {
+    if (err) {
+        console.error('Connection error', err.stack);
+        return;
+      }
+
+    return client.query(`SELECT id FROM department WHERE name = $1`, [strDepartment])
+    .then(res => {
+      if (res.rows.length > 0) {
+        let deletedValues = [res.rows[0].id];
+        // Execute a query
+        client.query(
+          //`DELETE FROM department WHERE id = $1;`, [deletedValues], (err, res) => {
+          `DELETE FROM department WHERE id = ${deletedValues}`, (err, res) => {
+            if (err) {
+            console.error('Deletion error', err.stack);
+          } else {
+            //console.log('Deletion result:', res.rows);
+          }
+
+          // Close the database connection
+          client.end((err) => {
+            if (err) {
+              console.error('Error closing connection', err.stack);
+            }
+          });
+        });
+      }else {
+        return null; // Return null if no match found
+      }
+  })
+  .catch(err => {
+    console.error('Error executing query', err.stack);
+    throw err;
+  });
+});
+}
+
+function deleteRole(strRole) {
+      
+  // Define your database connection configuration
+  const client = new Client({
+    host: 'localhost',
+    port: 5432,
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',  
+  });
+
+  // Connect to the PostgreSQL database
+  client.connect((err) => {
+    if (err) {
+        console.error('Connection error', err.stack);
+        return;
+      }
+
+    return client.query(`SELECT id FROM role WHERE title = $1`, [strRole])
+    .then(res => {
+      if (res.rows.length > 0) {
+        let deletedValues = [res.rows[0].id];
+        // Execute a query
+        client.query(
+          `DELETE FROM role WHERE id = ${deletedValues}`, (err, res) => {
+            if (err) {
+            console.error('Deletion error', err.stack);
+          } else {
+            //console.log('Deletion result:', res.rows);
+          }
+
+          // Close the database connection
+          client.end((err) => {
+            if (err) {
+              console.error('Error closing connection', err.stack);
+            }
+          });
+        });
+      }else {
+        return null; // Return null if no match found
+      }
+  })
+  .catch(err => {
+    console.error('Error executing query', err.stack);
+    throw err;
+  });
+});
+}
+
+function deleteEmployee(strEmployee) {
+      
+  // Define your database connection configuration
+  const client = new Client({
+    host: 'localhost',
+    port: 5432,
+    user: 'postgres',      
+    password: 'ForceB/wu',  
+    database: 'employees_db',  
+  });
+
+  // Connect to the PostgreSQL database
+  client.connect((err) => {
+    if (err) {
+        console.error('Connection error', err.stack);
+        return;
+      }
+
+    const nameParts = strEmployee.split(' ');
+    FirstName = nameParts[0];
+    LastName = nameParts.slice(1).join('');
+    return client.query(`SELECT id FROM employee WHERE first_name = $1
+        AND last_name = $2`, [FirstName, LastName])
+    .then(res => {
+      if (res.rows.length > 0) {
+        let deletedValues = [res.rows[0].id];
+        // Execute a query
+        client.query(
+          `DELETE FROM employee WHERE id = ${deletedValues}`, (err, res) => {
+            if (err) {
+            console.error('Deletion error', err.stack);
+          } else {
+            //console.log('Deletion result:', res.rows);
+          }
+
+          // Close the database connection
+          client.end((err) => {
+            if (err) {
+              console.error('Error closing connection', err.stack);
+            }
+          });
+        });
+      }else {
+        return null; // Return null if no match found
+      }
+  })
+  .catch(err => {
+    console.error('Error executing query', err.stack);
+    throw err;
+  });
+});
+}
   
 module.exports = {
   employeedbQuery,
   addDepartment,
   addRole,
   addEmployee,
-  updateEmployeeRole
+  updateEmployeeRole,
+  deleteDepartment,
+  deleteRole,
+  deleteEmployee
 }

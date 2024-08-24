@@ -23,12 +23,15 @@ Application can be started by opening a terminal session within the application'
 1. View all employees
 2. Add a new employee
 3. Update an employee's role
-4. View all departments
-5. Create a new department
-6. View all roles
-7. Create a new role
+5. Delete an employee
+6. View all departments
+7. Create a new department
+8. Delete a department
+9. View all roles
+10. Create a new role
+11. Delete a role
 
-On selecting a menu item, the selection will be executed and upon completion you will be returned to the main menu. If selecting any item to add or update the details of an employee, department or role, you will prompted with further questions. Upon answering all questions, a text notice will advise whether the action was successful or not.
+On selecting a menu item, the selection will be executed and upon completion you will be returned to the main menu. If selecting any item to add or update the details of an employee, department or role, you will prompted with further questions or choices. Upon answering all questions and choices, a text notice will advise whether the action was successful or not.
 
 All data is stored within a Postgres database called employee_db. Which can queried directly through the PSQL command line as well as PG Admin. 
 
@@ -42,7 +45,8 @@ The following steps can be performed to assess the functionality of the applicat
 1. Create a new department
 2. Create a new role
 3. Create a new employee and assign them to the newly created role
-4. Change the role for the employee created in previous step to another role 
+4. Change the role for the employee created in previous step to another role
+5. Delete employee 
   
 ## License
 None

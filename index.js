@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const dbhandler = require('./dbhandler');
 
+
 function mainMenu() {
   inquirer.prompt([
     {
@@ -41,7 +42,7 @@ function mainMenu() {
 
 async function viewDepartments() {
     let objDepartments = await dbhandler.employeedbQuery('SELECT * FROM department;');
-    console.table(objDepartments);
+    console.table(objDepartments); 
     mainMenu();
 }
 

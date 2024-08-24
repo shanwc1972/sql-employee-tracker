@@ -38,7 +38,11 @@ A video showing a demonstration of the application can be found below:
 All code either written or refactored by Warren Shan.
   
 ## Tests
-The following steps can be performed to assess   
+The following steps can be performed to assess the functionality of the application.
+1. Create a new department
+2. Create a new role
+3. Create a new employee and assign them to the newly created role
+4. Change the role for the employee created in previous step to another role 
   
 ## License
 None

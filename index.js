@@ -80,10 +80,10 @@ function addDepartment() {
 async function addRole() {
   let objDepartments = await dbhandler.employeedbQuery('SELECT name FROM department;');
   let arrDepartments = [];
-  for(let i=0; i < objDepartments.length; i++){
-    let Dept = objDepartments[i].name;
-    arrDepartments.push(Dept); 
-  };
+  objDepartments.forEach(department => {
+    let Dept = department.name;
+    arrDepartments.push(Dept);
+  });
   
   inquirer.prompt([
     {
@@ -104,56 +104,92 @@ async function addRole() {
       },
   ]).then(answers => {
     dbhandler.addRole(answers.title, answers.salary, answers.department);
-    //console.log(answers);
+    console.log(`New role: ${answers.title} added`);
     mainMenu();
   });
 }
 
-function addEmployee() {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'firstname',
-            message: `Enter the new employee's firstname:`,
-          },
-          {
-            type: 'input',
-            name: 'lastname',
-            message: `Enter the new employee's lastname:`,
-          },
-          {
-            type: 'input',
-            name: 'role',
-            message: `Enter the role for this new employee:`,
-          },
-          {
-            type: 'input',
-            name: 'manager',
-            message: `Select the manager for this new employee:`,
-          },
+async function addEmployee() {
+  //Create an array of roles
+  let objRoles = await dbhandler.employeedbQuery('SELECT title FROM role;');
+  let arrRoles = [];
+  objRoles.forEach(role => {
+    let Role = role.title;
+    arrRoles.push(Role);
+  });
+
+  //Create an array of managers
+  let objManagers = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS manager FROM employee e1;`);
+  let arrManagers = [];
+  objManagers.forEach(manager => {
+    let Manager = manager.manager;
+    arrManagers.push(Manager);
+  });
+
+  inquirer.prompt([
+      {
+        type: 'input',
+        name: 'firstname',
+        message: `Enter the new employee's firstname:`,
+      },
+      {
+        type: 'input',
+        name: 'lastname',
+        message: `Enter the new employee's lastname:`,
+      },
+      {
+        type: 'list',
+        name: 'role',
+        message: `Enter the role for this new employee:`,
+        choices: arrRoles
+      },
+      {
+        type: 'list',
+        name: 'manager',
+        message: `Select the manager for this new employee:`,
+        choices: arrManagers
+      },
     ]).then(answers => {
-      console.log(answers);
+      dbhandler.addEmployee(answers.firstname, answers.lastname, answers.role, answers.manager);
+      console.log(`New employee: ${answers.firstname} ${answers.lastname} added`)
       mainMenu();
     });
   }
 
-  function updateEmployeeRole() {
+async function updateEmployeeRole() {
+    //Create an array of employees
+    let objEmployees = await dbhandler.employeedbQuery(`SELECT CONCAT(first_name, ' ', last_name) AS name FROM employee e1;`);
+    let arrEmployees = [];
+    objEmployees.forEach(employee => {
+      let Employee = employee.name;
+      arrEmployees.push(Employee);
+    });
+    //Create an array of roles
+    let objRoles = await dbhandler.employeedbQuery('SELECT title FROM role;');
+    let arrRoles = [];
+    objRoles.forEach(role => {
+    let Role = role.title;
+    arrRoles.push(Role);
+    });
     inquirer.prompt([
         {
-            type: 'input',
+            type: 'list',
             name: 'employeename',
             message: `Select a name for the employee you wish to update:`,
+            choices: arrEmployees
           },
           {
-            type: 'input',
+            type: 'list',
             name: 'employeerole',
             message: `Select which role that this employee will perform:`,
+            choices: arrRoles
           },
     ]).then(answers => {
-      console.log(answers);
+      dbhandler.updateEmployeeRole(answers.employeename, answers.employeerole);
+      console.log(`Role for employee: ${answers.employeename} has been updated`);
       mainMenu();
     });
-  }
+}
 
 console.log('----------------');
 console.log('Employee tracker')
